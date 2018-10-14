@@ -1,22 +1,3 @@
-A library for Dart developers.
-
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
-
-## Usage
-
-A simple usage example:
-
-```dart
-import 'package:tinano_generator/tinano_generator.dart';
-
-main() {
-  var awesome = new Awesome();
-}
-```
-
-## Features and bugs
-
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: http://example.com/issues/replaceme
+This library can be included as a `dev-dependency`, as it does not contain any
+meaningful features for your app. 
+For more information on this library, go check out the [tinano](https://github.com/simolus3/tinano) library.

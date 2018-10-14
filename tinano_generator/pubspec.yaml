@@ -1,5 +1,5 @@
 name: tinano_generator
-description: A starting point for Dart libraries or applications.
+description: Code generation for the tinano library. To be included as a dev-dependency.
 
 environment:
   sdk: '>=2.0.0 <3.0.0'

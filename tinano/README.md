@@ -7,6 +7,25 @@ queries and the data structures they return, and it will automatically take care
 of all that manual and boring stuff, giving you a clean and type-safe way to
 manage your app's data.
 
+Table of Contents
+=================
+   * [tinano](#tinano)
+   * [Getting Started](#getting-started)
+         * [Setting up your project](#setting-up-your-project)
+         * [Creating a database](#creating-a-database)
+         * [Opening the database](#opening-the-database)
+         * [Database queries](#database-queries)
+            * [Variables](#variables)
+         * [Schema updates](#schema-updates)
+         * [Supported types](#supported-types)
+            * [For modifying statements (update / delete)](#for-modifying-statements-update--delete)
+            * [For insert statements](#for-insert-statements)
+            * [For select statements](#for-select-statements)
+   * [Accessing the raw database](#accessing-the-raw-database)
+   * [TO-DO list](#to-do-list)
+   * [Questions and feedback](#questions-and-feedback)
+
+
 # Getting Started
 ### Setting up your project
 First, let's prepare your `pubspec.yaml` to add this library and the tooling 
