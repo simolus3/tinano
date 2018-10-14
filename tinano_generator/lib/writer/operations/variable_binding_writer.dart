@@ -4,10 +4,10 @@ import 'package:tinano_generator/writer/writer.dart';
 import 'package:tinano_generator/utils.dart' as utils;
 
 class VariableBindingWriter extends Writer {
-
   final DefinedOperation operation;
 
-  VariableBindingWriter(this.operation, StringBuffer buffer, int indent) : super(buffer, indent);
+  VariableBindingWriter(this.operation, StringBuffer buffer, int indent)
+      : super(buffer, indent);
 
   String _localVariableNameAt(int i) => "bindParams_$i";
 
@@ -20,7 +20,8 @@ class VariableBindingWriter extends Writer {
   @override
   void write() {
     // Store the sql in a local variable
-    String rawSql = utils.escapeForDoubleQuoteConstant(operation.sql.updatedSql);
+    String rawSql =
+        utils.escapeForDoubleQuoteConstant(operation.sql.updatedSql);
     writeLineWithIndent("String sql =  \"$rawSql\";");
     writeLn();
 
@@ -43,12 +44,11 @@ class VariableBindingWriter extends Writer {
     // which we're going to pass to sqflite
     writeLn();
 
-    String bindArrayContents = operation.sql.variablesWithPosition
-      .map((variableName) {
-        final localIndex = sqlVarNameToLocalIndex[variableName];
-        return _localVariableNameAt(localIndex);
-      })
-      .join(", ");
+    String bindArrayContents =
+        operation.sql.variablesWithPosition.map((variableName) {
+      final localIndex = sqlVarNameToLocalIndex[variableName];
+      return _localVariableNameAt(localIndex);
+    }).join(", ");
 
     writeLineWithIndent("final bindArgs = [$bindArrayContents];");
   }

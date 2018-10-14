@@ -5,11 +5,12 @@ import 'package:tinano_generator/utils/type_utils.dart' as types;
 import 'package:tinano_generator/utils.dart';
 
 class SingleRowTransformationWriter extends Writer {
-
   final DartType targetType;
   final GenerationContext context;
 
-  SingleRowTransformationWriter(this.targetType, this.context, StringBuffer target, int indent) : super(target, indent);
+  SingleRowTransformationWriter(
+      this.targetType, this.context, StringBuffer target, int indent)
+      : super(target, indent);
 
   String _castStmt(String expression, DartType targetType) {
     if (targetType.displayName == "int") {
@@ -37,12 +38,17 @@ class SingleRowTransformationWriter extends Writer {
     }
 
     final customType = context.customTypeForDartType(targetType);
-    String constructorParams = customType.types.map((name, type) {
-      return MapEntry(_castStmt("row[\"${escapeForDoubleQuoteConstant(name)}\"]", type), null);
-    }).keys.join(", ");
+    String constructorParams = customType.types
+        .map((name, type) {
+          return MapEntry(
+              _castStmt("row[\"${escapeForDoubleQuoteConstant(name)}\"]", type),
+              null);
+        })
+        .keys
+        .join(", ");
 
     String targetName = targetType.displayName;
-    writeLineWithIndent("$targetName parsedRow = new $targetName($constructorParams);");
+    writeLineWithIndent(
+        "$targetName parsedRow = new $targetName($constructorParams);");
   }
-
 }

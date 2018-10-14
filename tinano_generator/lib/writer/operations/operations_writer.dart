@@ -7,19 +7,20 @@ import 'package:tinano_generator/writer/operations/writing_result_transformation
 import 'package:tinano_generator/writer/writer.dart';
 
 class OperationWriter extends Writer {
-
   final DefinedOperation operation;
   final GenerationContext context;
 
-  OperationWriter(this.operation, this.context, StringBuffer target, int indent) : super(target, indent);
+  OperationWriter(this.operation, this.context, StringBuffer target, int indent)
+      : super(target, indent);
 
   @override
   void write() {
     // First, create the correct method signature
     String returnType = operation.returnType.displayName;
     String methodName = operation.method.name;
-    String parameters = "(" + operation.method.parameters
-        .map((f) => f.toString()).join(", ") + ")";
+    String parameters = "(" +
+        operation.method.parameters.map((f) => f.toString()).join(", ") +
+        ")";
 
     // Future<Int> updateTheDatabaseWhatever(String myParam, String another) {
     writeLineWithIndent("$returnType $methodName$parameters async {");
@@ -30,12 +31,12 @@ class OperationWriter extends Writer {
     writeLn();
 
     if (operation.type == StatementType.select) {
-      ReadingResultTransformation(operation, context, target, indent + 1).write();
+      ReadingResultTransformation(operation, context, target, indent + 1)
+          .write();
     } else {
       WritingResultTransformation(operation, target, indent + 1).write();
     }
 
     writeLineWithIndent("}");
   }
-
 }

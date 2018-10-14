@@ -1,5 +1,4 @@
 class SqlWithVariables {
-
   /// The sql, but not as it was specified by the user but instead with all
   /// variables replaced with "?" so that we can use prepared statements.
   final String updatedSql;
@@ -13,18 +12,17 @@ class SqlWithVariables {
   /// n-th variable, so we need to keep track of the positons.
   final List<String> variablesWithPosition;
 
-  SqlWithVariables(this.updatedSql, this.foundVariables, this.variablesWithPosition);
-
+  SqlWithVariables(
+      this.updatedSql, this.foundVariables, this.variablesWithPosition);
 }
 
-
 class SqlVariableAnalyzer {
-
   String updatedSql;
   Set<String> foundVariables = new Set();
   List<String> variablesWithPosition = new List();
 
-  SqlWithVariables get sqlWithVars => SqlWithVariables(updatedSql, foundVariables, variablesWithPosition);
+  SqlWithVariables get sqlWithVars =>
+      SqlWithVariables(updatedSql, foundVariables, variablesWithPosition);
 
   static final RegExp _variableMatcher = RegExp(r":(\w*)");
 
@@ -61,5 +59,4 @@ class SqlVariableAnalyzer {
       offset += (end - start) - "?".length;
     }
   }
-
 }

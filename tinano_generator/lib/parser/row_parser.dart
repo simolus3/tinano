@@ -7,7 +7,6 @@ import 'package:tinano_generator/utils.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
 
 class RowTypeParser {
-
   final ClassElement element;
 
   RowTypeParser(this.element);
@@ -22,8 +21,10 @@ class RowTypeParser {
 
     constructor.parameters.forEach((param) {
       if (!types.typeNativelySupported(param.type)) {
-        error("That type is not supported. Please check the documentation of"
-            "tinano for the list of supported types.", element);
+        error(
+            "That type is not supported. Please check the documentation of"
+            "tinano for the list of supported types.",
+            element);
       }
 
       definedTypes[param.name] = param.type;
@@ -31,5 +32,4 @@ class RowTypeParser {
 
     return DefinedCustomType(element, definedTypes);
   }
-
 }

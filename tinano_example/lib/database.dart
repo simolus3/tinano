@@ -5,7 +5,6 @@ part 'database.g.dart';
 
 @TinanoDb(name: "my_database.sqlite", schemaVersion: 1)
 abstract class MyDatabase {
-
   static DatabaseBuilder<MyDatabase> createBuilder() => _$createMyDatabase();
 
   @Query("SELECT id, content FROM todos")
@@ -25,23 +24,18 @@ abstract class MyDatabase {
 }
 
 Future<MyDatabase> openMyDatabase() async {
-  return await (MyDatabase
-    .createBuilder()
-    .doOnCreate((db, version) async {
-      await db.execute("""CREATE TABLE `todos` ( 
+  return await (MyDatabase.createBuilder().doOnCreate((db, version) async {
+    await db.execute("""CREATE TABLE `todos` ( 
           `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
           `content` TEXT NOT NULL 
         )""");
-    })
-    .build());
+  }).build());
 }
 
 @row
 class TodoEntry {
-
   final int id;
   final String content;
 
   TodoEntry(this.id, this.content);
-
 }

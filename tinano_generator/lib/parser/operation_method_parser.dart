@@ -8,14 +8,14 @@ import 'package:tinano_generator/utils/type_utils.dart' as types;
 import 'package:tinano_generator/utils.dart';
 
 class OperationMethodParser {
-
   final MethodElement method;
   final GenerationContext context;
 
   OperationMethodParser(this.method, this.context);
 
   static bool shouldParseFor(MethodElement method) {
-    final annotations = method.metadata.where(types.isActionAnnotation).toList();
+    final annotations =
+        method.metadata.where(types.isActionAnnotation).toList();
 
     return annotations.isNotEmpty;
   }
@@ -52,7 +52,8 @@ class OperationMethodParser {
       error("Database methods may not have an implementation", method);
     }
     if (method.parameters.any((param) => param.isOptional)) {
-      error("Parameters of database methods may not be optional or positional", method);
+      error("Parameters of database methods may not be optional or positional",
+          method);
     }
 
     final sqlWithVars = SqlVariableAnalyzer(sql).sqlWithVars;
@@ -64,20 +65,22 @@ class OperationMethodParser {
     final parameters = operation.parameters.keys.toSet();
 
     if (!equality.equals(varsInSql, parameters)) {
-      error("The variables in your SQL do not match the parameters defined "
+      error(
+          "The variables in your SQL do not match the parameters defined "
           "in your method. All method parameters need to show up in SQL, and "
           "vice-versa.\n"
           "These variables were found in your SQL: $varsInSql\n"
-          "And these varaibles were in your method: $parameters", method);
+          "And these varaibles were in your method: $parameters",
+          method);
     }
 
     final returnType = operation.returnTypeNoFutureOrList;
-    if (type == StatementType.select && !types.typeNativelySupported(returnType)) {
+    if (type == StatementType.select &&
+        !types.typeNativelySupported(returnType)) {
       // Parse & validate the return type if this didn't happen yet.
       context.customTypeForDartType(returnType);
     }
 
     return operation;
   }
-
 }

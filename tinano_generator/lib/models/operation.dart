@@ -4,35 +4,36 @@ import 'package:tinano_generator/parser/sql_variable_analyzer.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
 
 enum StatementType {
-	select,
+  select,
+
   /// also includes delete
-	update,
-	insert
+  update,
+  insert
 }
 
 class DefinedOperation {
+  final StatementType type;
+  final SqlWithVariables sql;
+  final MethodElement method;
 
-	final StatementType type;
-	final SqlWithVariables sql;
-	final MethodElement method;
+  DartType get returnType => method.returnType;
+  DartType get returnTypeNoFuture =>
+      returnType.flattenFutures(method.context.typeSystem);
 
-	DartType get returnType => method.returnType;
-	DartType get returnTypeNoFuture => returnType.flattenFutures(method.context.typeSystem);
+  DartType get returnTypeNoFutureOrList {
+    var type = returnTypeNoFuture;
 
-	DartType get returnTypeNoFutureOrList {
-		var type = returnTypeNoFuture;
+    if (types.isList(type)) {
+      type = types.flattenedList(type);
+    }
 
-		if (types.isList(type)) {
-			type = types.flattenedList(type);
-		}
+    return type;
+  }
 
-		return type;
-	}
+  Map<String, DartType> get parameters {
+    final paramWithTypes = Map<String, DartType>();
 
-	Map<String, DartType> get parameters {
-	  final paramWithTypes = Map<String, DartType>();
-
-	  for (final param in method.parameters) {
+    for (final param in method.parameters) {
       paramWithTypes[param.name] = param.type;
     }
 
@@ -40,5 +41,4 @@ class DefinedOperation {
   }
 
   DefinedOperation(this.type, this.sql, this.method);
-
 }

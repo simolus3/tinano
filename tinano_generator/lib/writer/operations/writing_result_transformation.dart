@@ -9,32 +9,37 @@ enum _TransformationBehavior {
 }
 
 class WritingResultTransformation extends Writer {
-
   final DefinedOperation operation;
 
-  WritingResultTransformation(this.operation, StringBuffer target, int indent) : super(target, indent);
+  WritingResultTransformation(this.operation, StringBuffer target, int indent)
+      : super(target, indent);
 
   _TransformationBehavior get _behavior {
     final returnType = operation.returnTypeNoFuture;
 
     final canReturnDirectly = returnType.isDynamic ||
         returnType.element.library.isDartCore &&
-            (returnType.displayName == "int" || returnType.displayName == "num");
+            (returnType.displayName == "int" ||
+                returnType.displayName == "num");
 
     if (canReturnDirectly) return _TransformationBehavior.returnValueDirectly;
 
-    if (operation.type == StatementType.insert && returnType.displayName == "bool") {
+    if (operation.type == StatementType.insert &&
+        returnType.displayName == "bool") {
       // todo: How do we check if an insert was successful? Compare last insert
       // id before + after insert would not work in all cases?
       return _TransformationBehavior.alwaysTrue;
     }
 
-    if (operation.type == StatementType.update && returnType.displayName == "bool") {
+    if (operation.type == StatementType.update &&
+        returnType.displayName == "bool") {
       return _TransformationBehavior.checkIfValueGreaterThanZero;
     }
 
-    error("This library doesn't know how to return that type here. Please "
-        "check the documentation of tinano for details.", operation.method);
+    error(
+        "This library doesn't know how to return that type here. Please "
+        "check the documentation of tinano for details.",
+        operation.method);
   }
 
   @override
@@ -46,8 +51,9 @@ class WritingResultTransformation extends Writer {
       return;
     }
 
-    String resultVarName = (operation.type == StatementType.insert) ?
-      "lastInsertedRecordId" : "affectedRows";
+    String resultVarName = (operation.type == StatementType.insert)
+        ? "lastInsertedRecordId"
+        : "affectedRows";
 
     switch (_behavior) {
       case _TransformationBehavior.alwaysTrue:
@@ -61,5 +67,4 @@ class WritingResultTransformation extends Writer {
         break;
     }
   }
-
 }

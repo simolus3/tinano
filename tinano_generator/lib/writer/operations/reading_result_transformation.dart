@@ -5,11 +5,12 @@ import 'package:tinano_generator/writer/writer.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
 
 class ReadingResultTransformation extends Writer {
-
   DefinedOperation operation;
   GenerationContext context;
 
-  ReadingResultTransformation(this.operation, this.context, StringBuffer buffer, int indent) : super(buffer, indent);
+  ReadingResultTransformation(
+      this.operation, this.context, StringBuffer buffer, int indent)
+      : super(buffer, indent);
 
   @override
   void write() {
@@ -22,16 +23,18 @@ class ReadingResultTransformation extends Writer {
 
       writeLineWithIndent("rows.forEach((row) {");
 
-      new SingleRowTransformationWriter(targetType, context, target, indent + 1).write();
+      new SingleRowTransformationWriter(targetType, context, target, indent + 1)
+          .write();
       writeLineWithIndent("parsedResults.add(parsedRow);");
 
       writeLineWithIndent("});");
       writeLineWithIndent("return parsedResults;");
     } else {
       writeLineWithIndent("final row = rows.first;");
-      new SingleRowTransformationWriter(operation.returnTypeNoFuture, context, target, indent).write();
+      new SingleRowTransformationWriter(
+              operation.returnTypeNoFuture, context, target, indent)
+          .write();
       writeLineWithIndent("return parsedRow;");
     }
   }
-
 }

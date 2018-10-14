@@ -7,7 +7,6 @@ import 'package:tinano_generator/parser/database_parser.dart';
 import 'package:tinano_generator/writer/database_writer.dart';
 
 class TinanoGenerator extends Generator {
-
   static const String TYPE_DATABASE = "Database";
 
   GenerationContext context;

@@ -7,54 +7,53 @@ import 'package:tinano_generator/utils/type_utils.dart' as types;
 import '../utils.dart' as utils;
 
 class DatabaseParser {
+  ClassElement element;
+  ElementAnnotation annotation;
 
-	ClassElement element;
-	ElementAnnotation annotation;
+  DefinedDatabase database;
 
-	DefinedDatabase database;
+  final GenerationContext _context;
 
-	final GenerationContext _context;
+  DatabaseParser._(this.element, this.annotation, this._context);
 
-	DatabaseParser._(this.element, this.annotation, this._context);
+  static DatabaseParser forClass(
+      ClassElement element, GenerationContext context) {
+    final annotations = element.metadata;
 
-	static DatabaseParser forClass(ClassElement element, GenerationContext context) {
-		final annotations = element.metadata;
+    final dbAnnotations = annotations.where(types.isDatabaseAnnotation);
 
-		final dbAnnotations = annotations
-				.where(types.isDatabaseAnnotation);
+    if (dbAnnotations.isEmpty) {
+      // Class is not annotated with @TinanoDb, ignore
+      return null;
+    }
 
-		if (dbAnnotations.isEmpty) {
-			// Class is not annotated with @TinanoDb, ignore
-			return null;
-		}
+    return DatabaseParser._(element, dbAnnotations.single, context);
+  }
 
-		return DatabaseParser._(element, dbAnnotations.single, context);
-	}
+  void parse() {
+    if (!element.isAbstract) {
+      utils.error("Database classes must be abstract", element);
+    }
 
-	void parse() {
-		if (!element.isAbstract) {
-			utils.error("Database classes must be abstract", element);
-		}
+    if (element.typeParameters.isNotEmpty) {
+      utils.error("Database classes may not be generic", element);
+    }
 
-		if (element.typeParameters.isNotEmpty) {
-			utils.error("Database classes may not be generic", element);
-		}
+    final annotationValue = annotation.computeConstantValue();
+    String path = annotationValue.getField("name").toStringValue();
+    int schema = annotationValue.getField("schemaVersion").toIntValue();
 
-		final annotationValue = annotation.computeConstantValue();
-		String path = annotationValue.getField("name").toStringValue();
-		int schema = annotationValue.getField("schemaVersion").toIntValue();
+    database = DefinedDatabase();
+    database.clazz = element;
+    database.annotation = DatabaseAnnotation(path, schema, annotation);
 
-		database = DefinedDatabase();
-		database.clazz = element;
-		database.annotation = DatabaseAnnotation(path, schema, annotation);
+    database.staticBuilder = BuildMethodParser(element).parse();
 
-		database.staticBuilder = BuildMethodParser(element).parse();
-
-		for (final method in element.methods) {
-		  if (OperationMethodParser.shouldParseFor(method)) {
-		    database.operations.add(OperationMethodParser(method, _context).parse());
+    for (final method in element.methods) {
+      if (OperationMethodParser.shouldParseFor(method)) {
+        database.operations
+            .add(OperationMethodParser(method, _context).parse());
       }
     }
-	}
-
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:meta/meta.dart';
 
 abstract class Writer {
-
   final StringBuffer target;
   final int indent;
 
@@ -17,5 +16,4 @@ abstract class Writer {
   void writeLn() => target.writeln();
 
   void write();
-
 }
