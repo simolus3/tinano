@@ -1,0 +1,17 @@
+targets:
+  $default:
+    builders:
+      tinano|tinano_generator:
+        enabled: true
+
+builders:
+  tinano_generator:
+    target: ":tinano"
+    import: "package:tinano_generator/generator/builder.dart"
+    builder_factories: ["tinanoBuilder"]
+    # The `partId` argument to `SharedPartBuilder` is "tinano"
+    build_extensions: {".dart": [".tinano.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    # To copy the `.g.part` content into `.g.dart` in the source tree
+    applies_builders: ["source_gen|combining_builder"]

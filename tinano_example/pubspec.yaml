@@ -1,0 +1,22 @@
+name: tinano_example
+description: A new flutter application project.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+
+dependencies:
+  tinano:
+    path: ../tinano
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  tinano_generator:
+    path: ../tinano_generator
+  build_runner:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
