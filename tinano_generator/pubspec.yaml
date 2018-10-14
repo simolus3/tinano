@@ -1,6 +1,6 @@
 name: tinano_generator
 description: Code generation for the tinano library. To be included as a dev-dependency.
-version: 0.1.0+1
+version: 0.1.1
 homepage: https://github.com/simolus3/tinano
 author: Simon Binder <simolus3@gmail.com>
 
