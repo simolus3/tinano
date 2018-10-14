@@ -10,5 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  meta:
-  sqflite:
+  meta: ^1.1.6
+  path: ^1.6.2
+  sqflite: ^0.12.2
