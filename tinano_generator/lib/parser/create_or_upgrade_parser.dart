@@ -39,6 +39,10 @@ class CreateOrUpgradeParser {
       final from = metadata.constantValue.getField("from").toIntValue();
       final to = metadata.constantValue.getField("to").toIntValue();
 
+      if (to <= from) {
+        error("The to version must be bigger than the from version!", method);
+      }
+
       db.migrationMethods.add(OnUpgradeMethod(method, metadata, from, to));
     }
   }
