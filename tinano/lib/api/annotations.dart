@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-class TinanoDb {
+class DatabaseInfo {
   // note: When performing refactorings of this class, also adapt usages in
   // generator (defined_database.dart).
 
@@ -8,7 +8,7 @@ class TinanoDb {
   final String name;
   final int schemaVersion;
 
-  const TinanoDb({@required this.name, this.schemaVersion = 1});
+  const DatabaseInfo({@required this.name, this.schemaVersion = 1});
 }
 
 class Row {
