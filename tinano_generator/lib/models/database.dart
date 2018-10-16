@@ -7,12 +7,15 @@ class DefinedDatabase {
   ClassElement clazz;
   StaticBuilderMethod staticBuilder;
 
+  OnCreateMethod onCreateMethod;
+  List<OnUpgradeMethod> migrationMethods = [];
+
   String get nameOfImplementationClass => "_\$${clazz.name}Impl";
 
   List<DefinedOperation> operations = [];
 }
 
-/// a `@TinanoDb` annotation as it appears on database classes defined.
+/// a `@DatabaseInfo` annotation as it appears on database classes defined.
 class DatabaseAnnotation {
   final String path;
   final int schemaVersion;
@@ -37,4 +40,23 @@ class StaticBuilderMethod {
   final String nameOfReferencedImplName;
 
   StaticBuilderMethod(this.method, this.nameOfReferencedImplName);
+}
+
+class OnCreateMethod {
+
+  final MethodElement method;
+  final ElementAnnotation annotation;
+
+  OnCreateMethod(this.method, this.annotation);
+}
+
+class OnUpgradeMethod {
+
+  final MethodElement method;
+  final ElementAnnotation annotation;
+
+  final int from;
+  final int to;
+
+  OnUpgradeMethod(this.method, this.annotation, this.from, this.to);
 }

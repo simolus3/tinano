@@ -13,15 +13,12 @@ class DatabaseWriter extends Writer {
 
   @override
   void write() {
-    // First, write the static generor function
+    // First, write the static generator function
     StaticFunctionWriter(database, target, indent).write();
 
     /*
-			class _$MyDatabaseImpl extends MyDatabase implements GeneratedDatabaseImpl {
-
-				Database database;
-
-				// all the generated methods
+			class _$MyDatabaseImpl extends MyDatabase {
+				// all the generated methods will turn up here
 			}
 		 */
 
@@ -29,8 +26,7 @@ class DatabaseWriter extends Writer {
     final implClassName = database.nameOfImplementationClass;
 
     writeLineWithIndent(
-        "class $implClassName extends $originalClassName implements GeneratedDatabaseImpl {");
-    writeLineWithIndent("Database database;", 1);
+        "class $implClassName extends $originalClassName {");
 
     for (final operation in database.operations) {
       OperationWriter(operation, context, target, indent + 1).write();

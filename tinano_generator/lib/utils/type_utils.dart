@@ -20,7 +20,7 @@ bool typeNativelySupported(DartType type) {
 // TODO We should check the library here? What if there was another library
 // using these class names?
 bool isDatabaseAnnotation(ElementAnnotation annotation) {
-  return annotation.constantValue.type.displayName == "TinanoDb";
+  return annotation.constantValue.type.displayName == "DatabaseInfo";
 }
 
 bool isRowAnnotation(ElementAnnotation annotation) {
@@ -31,3 +31,12 @@ bool isActionAnnotation(ElementAnnotation annotation) {
   return ["Update", "Query", "Insert", "Delete"]
       .contains(annotation.constantValue.type.displayName);
 }
+
+bool isOnCreateAnnotation(ElementAnnotation annotation) {
+  return annotation.constantValue.type.displayName == "OnCreate";
+}
+
+bool isOnUpgradeAnnotation(ElementAnnotation annotation) {
+  return annotation.constantValue.type.displayName == "OnUpgrade";
+}
+

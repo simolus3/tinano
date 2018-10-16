@@ -16,24 +16,22 @@ class SchemaMigrationWithVersion {
 
 abstract class TinanoDatabase {
 
+  /// The database from sqflite which we use to send queries etc.
   @protected
-  DatabaseExecutor db;
+  DatabaseExecutor database;
 
   /// Should only be used by the generated code
-  @protected
   _OnCreate onCreate;
   /// Should only be used by the generated code
-  @protected
   List<SchemaMigrationWithVersion> migrations;
 
   /// Opens this database. This method should only be invoked by the generated
   /// code.
-  @protected
-  Future<void> open(String fileName, int path) async {
+  Future<void> performOpenAndInitialize(String fileName, int path) async {
     final path = await getDatabasesPath();
     final dbPath = join(path, fileName);
 
-    db = await openDatabase(
+    database = await openDatabase(
       dbPath,
       onCreate: (db, _) async => await onCreate(db),
       onUpgrade: (db, from, to) async {

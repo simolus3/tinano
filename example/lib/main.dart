@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Just execute some async function, we ignore the return values here. This
     // is not nice, but for our example it will do.
     () async {
-      _database = await openMyDatabase();
+      _database = await MyDatabase.open();
       await _updateTodosFromDb();
     }();
   }

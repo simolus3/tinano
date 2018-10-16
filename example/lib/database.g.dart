@@ -6,12 +6,16 @@ part of 'database.dart';
 // TinanoGenerator
 // **************************************************************************
 
-DatabaseBuilder<MyDatabase> _$createMyDatabase() {
-  return new DatabaseBuilder(new _$MyDatabaseImpl(), "my_database.sqlite", 1);
+Future<MyDatabase> _$openMyDatabase() async {
+  final database = _$MyDatabaseImpl();
+  database.onCreate = database._onDbCreated;
+  database.migrations
+      .add(SchemaMigrationWithVersion(database._onDbUpgraded, 1, 2));
+  database.performOpenAndInitialize("my_database.sqlite", 1);
+  return database;
 }
 
-class _$MyDatabaseImpl extends MyDatabase implements GeneratedDatabaseImpl {
-  Database database;
+class _$MyDatabaseImpl extends MyDatabase {
   Future<List<TodoEntry>> getTodoEntries() async {
     String sql = "SELECT id, content FROM todos";
 
@@ -41,7 +45,7 @@ class _$MyDatabaseImpl extends MyDatabase implements GeneratedDatabaseImpl {
   }
 
   Future<int> getAmountOfTodos() async {
-    String sql = "SELECT COUNT(id) FROM todos";
+    String sql = "SELECT COUNT(id) F ROM todos";
 
     final bindArgs = [];
 

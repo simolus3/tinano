@@ -9,11 +9,11 @@ class BuildMethodParser {
   BuildMethodParser(this.dbClass);
 
   StaticBuilderMethod parse() {
-    // static DatabaseBuilder<MyDatabase> createBuilder() => $myBuilderName();
-    final method = dbClass.getMethod("createBuilder");
+    // static Future<MyDatabase> open() => $myBuilderName();
+    final method = dbClass.getMethod("open");
     if (method == null) {
       utils.error(
-          "The database class must have a static method called createBuilder. "
+          "The database class must have a static method called open(). "
           "Consult the README from tinano for details",
           dbClass);
     }
@@ -25,11 +25,11 @@ class BuildMethodParser {
       utils.error("This method must not have any parameters!", method);
     }
 
-    // For class S, it must return a DatabaseBuilder<S>
-    final expectedName = "DatabaseBuilder<${dbClass.displayName}>";
+    // For class S, it must return a Future<S>
+    final expectedName = "Future<${dbClass.displayName}>";
     if (method.returnType.displayName != expectedName) {
       utils.error(
-          "This method must return a DatabaseBuilder<${dbClass.displayName}>",
+          "This method must return a $expectedName",
           method);
     }
 
@@ -43,7 +43,7 @@ class BuildMethodParser {
     final returnExpression = (body as ExpressionFunctionBody).expression;
     if (!(returnExpression is MethodInvocation)) {
       utils.error(
-          "This method must call a defined function databaseBuilder() => \$generatedFn()",
+          "This method must call a defined function databaseBuilder() => _\$generatedFn()",
           method);
     }
 

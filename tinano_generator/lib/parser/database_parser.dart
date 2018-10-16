@@ -2,6 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:tinano_generator/generator/generation_context.dart';
 import 'package:tinano_generator/models/database.dart';
 import 'package:tinano_generator/parser/build_method_parser.dart';
+import 'package:tinano_generator/parser/create_or_upgrade_parser.dart';
 import 'package:tinano_generator/parser/operation_method_parser.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
 import '../utils.dart' as utils;
@@ -39,6 +40,10 @@ class DatabaseParser {
       utils.error("Database classes may not be generic", element);
     }
 
+    if (element.supertype.displayName != "TinanoDatabase") {
+      utils.error("Database classes must inherit from TinanoDatabase", element);
+    }
+
     final annotationValue = annotation.computeConstantValue();
     String path = annotationValue.getField("name").toStringValue();
     int schema = annotationValue.getField("schemaVersion").toIntValue();
@@ -53,6 +58,10 @@ class DatabaseParser {
       if (OperationMethodParser.shouldParseFor(method)) {
         database.operations
             .add(OperationMethodParser(method, _context).parse());
+      }
+
+      if (CreateOrUpgradeParser.shouldParse(method)) {
+        CreateOrUpgradeParser(database, method).parse();
       }
     }
   }
