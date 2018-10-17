@@ -17,6 +17,8 @@ class RowTypeParser {
     final fields = List<FieldDefinition>();
 
     constructor.parameters.forEach((param) {
+      FieldElement field = _findFieldForConstructorParam(param);
+
       if (!types.typeNativelySupported(param.type)) {
         error(
             "That type is not supported. Please check the documentation of"
@@ -24,9 +26,21 @@ class RowTypeParser {
             element);
       }
 
-      fields.add(SimpleFieldDefinition(param.name, null, param.type));
+      final fromColumnAnnotation = field.metadata
+          .where(types.isFromColumnAnnotation);
+
+      String customColumnName = null;
+      if (fromColumnAnnotation.isNotEmpty) {
+        customColumnName = fromColumnAnnotation.first.constantValue.getField("column").toStringValue();
+      }
+
+      fields.add(SimpleFieldDefinition(param.name, customColumnName, param.type));
     });
 
     return DefinedCustomType(element, fields);
+  }
+
+  FieldElement _findFieldForConstructorParam(ParameterElement param) {
+    return element.fields.singleWhere((field) => field.name == param.name);
   }
 }

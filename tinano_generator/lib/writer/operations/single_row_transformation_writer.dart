@@ -47,7 +47,7 @@ class SingleRowTransformationWriter extends Writer {
         if (field is SimpleFieldDefinition) {
           String escapedColumn = escapeForDoubleQuoteConstant(field.sqlColumnName);
 
-          _castStmt("row[\"$escapedColumn\"]", field.type);
+          return _castStmt("row[\"$escapedColumn\"]", field.type);
         }
 
         // TODO Handle rows referencing other rows.
