@@ -17,6 +17,7 @@ Table of Contents
   * [Opening the database](#opening-the-database)
 * [Database queries](#database-queries)
   * [Variables](#variables)
+  * [Transactions](#transactions)
 * [Schema updates](#schema-updates)
 * [Supported types](#supported-types)
   * [For modifying statements (update / delete)](#for-modifying-statements-update--delete)
@@ -191,6 +192,26 @@ to first send the sql without data, and then the variables. This means that you
 won't be able to use variables for everything, see
 [this](https://www.quora.com/What-are-the-limitations-of-PDO-prepared-statements-Can-I-define-the-table-and-row-as-arguments) for some examples where you can't.
 
+#### Transactions
+You can get a special instance of your database by defining a method with
+`@withTransaction`: Whenever that method is called, the body that you defined
+will run within a transaction that commits after the `Future` returned by the
+method was resolved.
+```dart
+@withTransaction
+Future<bool> createAndChangeName(String originalName, String updatedName) async {
+  var id = await createUserWithName(originalName);
+  await changeName(id, updatedName);
+}
+```
+Notice that, to make this work, tinano will create a __new instance__ of
+your database class, call the transactional method on it, and then go back
+to the original instance. This means that, if you have any custom fields defined
+in your database class, these will not be available in a transaction method.
+It is generally recommended to keep every logic that is not strictly needed
+for database access out of the database class. Check out the generated code
+for your transaction method if you need details.
+
 ### Schema updates
 After bumping your version in `@DatabaseInfo`, you will have to perform some 
 migrations manually. You can do this directly in your database classes by 
@@ -264,7 +285,6 @@ parameter).
 Roughly sorted by descending priority. If you have any suggestions, please go ahead and
 [open an issue](https://github.com/simolus3/tinano/issues/new).
 
-- Batches and transactions for improved performance and reliability.
 - Being able to use field names that differ from the sql column name in row
   classes. Adding some annotations like `@FromColumn("my_column")`.
 - Support `@row` classes that have other `@row` types as fields.
@@ -275,6 +295,7 @@ Roughly sorted by descending priority. If you have any suggestions, please go ah
   on Android.
 - Support for custom classes as variable parameters, specifying something like
   `WHERE id = :user.id` in your sql and then having a `User user` as a parameter.
+- Batches
 
 # Questions and feedback
 This library is still in quite an early stage and will likely see some changes
