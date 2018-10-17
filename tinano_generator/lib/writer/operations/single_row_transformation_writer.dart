@@ -1,9 +1,13 @@
 import 'package:analyzer/dart/element/type.dart';
 import 'package:tinano_generator/generator/generation_context.dart';
+import 'package:tinano_generator/models/custom_types.dart';
 import 'package:tinano_generator/writer/writer.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
 import 'package:tinano_generator/utils.dart';
 
+/// Given that there is a local variable named row containing a single row from
+/// sqlite, writes a declaration to a variable named "parsedRow" that contains
+/// the parsed data.
 class SingleRowTransformationWriter extends Writer {
   final DartType targetType;
   final GenerationContext context;
@@ -38,14 +42,17 @@ class SingleRowTransformationWriter extends Writer {
     }
 
     final customType = context.customTypeForDartType(targetType);
-    String constructorParams = customType.types
-        .map((name, type) {
-          return MapEntry(
-              _castStmt("row[\"${escapeForDoubleQuoteConstant(name)}\"]", type),
-              null);
-        })
-        .keys
-        .join(", ");
+    String constructorParams = customType.fields
+      .map((field) {
+        if (field is SimpleFieldDefinition) {
+          String escapedColumn = escapeForDoubleQuoteConstant(field.sqlColumnName);
+
+          _castStmt("row[\"$escapedColumn\"]", field.type);
+        }
+
+        // TODO Handle rows referencing other rows.
+      })
+      .join(", ");
 
     String targetName = targetType.displayName;
     writeLineWithIndent(

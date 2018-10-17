@@ -1,7 +1,4 @@
-import 'dart:collection';
-
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:tinano_generator/models/custom_types.dart';
 import 'package:tinano_generator/utils.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
@@ -17,7 +14,7 @@ class RowTypeParser {
 
   DefinedCustomType parse() {
     final constructor = element.constructors.single;
-    final definedTypes = LinkedHashMap<String, DartType>();
+    final fields = List<FieldDefinition>();
 
     constructor.parameters.forEach((param) {
       if (!types.typeNativelySupported(param.type)) {
@@ -27,9 +24,9 @@ class RowTypeParser {
             element);
       }
 
-      definedTypes[param.name] = param.type;
+      fields.add(SimpleFieldDefinition(param.name, null, param.type));
     });
 
-    return DefinedCustomType(element, definedTypes);
+    return DefinedCustomType(element, fields);
   }
 }
