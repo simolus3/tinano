@@ -66,6 +66,44 @@ class Row {
 /// how to use this class exactly.
 const row = Row._();
 
+class WithTransaction {
+  const WithTransaction._();
+}
+
+/// Annotation to use on a method in a tinano database class to ensure that all
+/// database methods called in the body of the annotated method should operate
+/// on a transaction.
+/// An example might look like this:
+/// ```
+/// // ...
+/// abstract class MyDatabase extends TinanoDatabase {
+///
+///   @Update("...")
+///   Future myFirstUpdate();
+///   @Delete("...")
+///   Future myFirstDelete();
+///
+///   @withTransaction
+///   Future updateAndDeleteAtomically() async {
+///     // These will now operate on a transaction!
+///     await myFirstUpdate();
+///     await myFirstDelete();
+///   }
+/// }
+/// ```
+/// Please be aware of the following limitations in this API:
+/// 1. The code inside the method annotated with `@withTransaction` will be
+///    called on a different object of your database class. tinano will create
+///    an new instance of it that does not use the regular database but instead
+///    the transaction.
+///    This also means that you should not put custom logic into your database
+///    classes (e.g. defining custom fields etc.) as your database object might
+///    be re-created.
+/// 2. There will be a deadlock when using transactions and the regular database
+///    interchangeably. This should not be possible with the regular tinano APIs,
+///    but it can happen when you're using the database from sqflite directly.
+const withTransaction = WithTransaction._();
+
 abstract class DatabaseAction {
   final String sql;
 

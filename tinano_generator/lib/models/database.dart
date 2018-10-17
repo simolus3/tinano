@@ -13,6 +13,7 @@ class DefinedDatabase {
   String get nameOfImplementationClass => "_\$${clazz.name}Impl";
 
   List<DefinedOperation> operations = [];
+  List<DefinedTransaction> transactionMethods = [];
 }
 
 /// a `@DatabaseInfo` annotation as it appears on database classes defined.

@@ -32,6 +32,10 @@ bool isActionAnnotation(ElementAnnotation annotation) {
       .contains(annotation.constantValue.type.displayName);
 }
 
+bool isTransactionAnnotation(ElementAnnotation annotation) {
+  return annotation.constantValue.type.displayName == "WithTransaction";
+}
+
 bool isOnCreateAnnotation(ElementAnnotation annotation) {
   return annotation.constantValue.type.displayName == "OnCreate";
 }

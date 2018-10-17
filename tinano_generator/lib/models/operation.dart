@@ -42,3 +42,11 @@ class DefinedOperation {
 
   DefinedOperation(this.type, this.sql, this.method);
 }
+
+class DefinedTransaction {
+
+  final MethodElement method;
+
+  DefinedTransaction(this.method);
+
+}

@@ -16,6 +16,11 @@ Future<MyDatabase> _$openMyDatabase() async {
 }
 
 class _$MyDatabaseImpl extends MyDatabase {
+  @override
+  MyDatabase copyWithExecutor(DatabaseExecutor db) {
+    return _$MyDatabaseImpl()..database = db;
+  }
+
   Future<List<TodoEntry>> getTodoEntries() async {
     String sql = "SELECT id, content FROM todos";
 
@@ -45,7 +50,7 @@ class _$MyDatabaseImpl extends MyDatabase {
   }
 
   Future<int> getAmountOfTodos() async {
-    String sql = "SELECT COUNT(id) F ROM todos";
+    String sql = "SELECT COUNT(id) FROM todos";
 
     final bindArgs = [];
 
@@ -79,5 +84,24 @@ class _$MyDatabaseImpl extends MyDatabase {
     int affectedRows = await database.rawUpdate(sql, bindArgs);
 
     return affectedRows > 0;
+  }
+
+  @override
+  Future<void> myTransaction(String test) {
+    // If we're already in a transaction, call super function that performs the
+    // actual logic (as defined by the user) directly.
+    if (isInTransaction) {
+      return super.myTransaction(test);
+    } else {
+      // Not in a transaction yet. We start a transaction, in which we create a
+      // new object on which we call the function that should run in a
+      // transaction. As that object will recognize it's in a transaction, it
+      // will perform the logic directly.
+      return doInTransaction((_$transaction) {
+        final transactionDb = copyWithExecutor(_$transaction);
+
+        return transactionDb.myTransaction(test);
+      });
+    }
   }
 }

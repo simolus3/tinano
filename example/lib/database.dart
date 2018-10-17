@@ -28,7 +28,7 @@ abstract class MyDatabase extends TinanoDatabase {
   @Insert("INSERT INTO todos (content) VALUES (:content)")
   Future<int> createTodoEntryAndReturnId(String content);
 
-  @Query("SELECT COUNT(id) F ROM todos")
+  @Query("SELECT COUNT(id) FROM todos")
   Future<int> getAmountOfTodos();
 
   @Update("UPDATE todos SET content = :content WHERE id = :id")
@@ -36,6 +36,12 @@ abstract class MyDatabase extends TinanoDatabase {
 
   @Delete("DELETE FROM todos WHERE id = :id")
   Future<bool> deleteTodoEntry(int id);
+
+  @withTransaction
+  Future<void> myTransaction(String test) async {
+    await updateTodoText(1, test);
+    await getAmountOfTodos();
+  }
 }
 
 @row

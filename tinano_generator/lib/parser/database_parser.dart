@@ -4,6 +4,7 @@ import 'package:tinano_generator/models/database.dart';
 import 'package:tinano_generator/parser/build_method_parser.dart';
 import 'package:tinano_generator/parser/create_or_upgrade_parser.dart';
 import 'package:tinano_generator/parser/operation_method_parser.dart';
+import 'package:tinano_generator/parser/transaction_parser.dart';
 import 'package:tinano_generator/utils/type_utils.dart' as types;
 import '../utils.dart' as utils;
 
@@ -62,6 +63,10 @@ class DatabaseParser {
 
       if (CreateOrUpgradeParser.shouldParse(method)) {
         CreateOrUpgradeParser(database, method).parse();
+      }
+
+      if (TransactionParser.shouldParseFor(method)) {
+        TransactionParser(database, method).parse();
       }
     }
   }
