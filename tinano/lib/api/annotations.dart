@@ -66,6 +66,30 @@ class Row {
 /// how to use this class exactly.
 const row = Row._();
 
+/// By default, the name of a field on your @row classes is also the column name
+/// tinano expects to find when parsing a response from your queries.
+/// However, sometimes this means that you'd have to put "... AS simpleName" in
+/// your sql queries to match that constraint. With this annotation that can be
+/// used on a field in your @row classes, you can instruct the tinano generator
+/// to instead use the specified column. This can be helpful when you're parsing
+/// some queries that called sql functions:
+/// ```
+/// // works with "SELECT name, COUNT(id) FROM users GROUP BY name"
+/// @row
+/// class DistributionOfNames {
+///   final String name;
+///   @FromColumn("COUNT(id)")
+///   final int amount;
+///
+///   DistributionOfNames(this.name, this.amount);
+/// }
+/// ```
+class FromColumn {
+  final String column;
+
+  const FromColumn(this.column);
+}
+
 class WithTransaction {
   const WithTransaction._();
 }
