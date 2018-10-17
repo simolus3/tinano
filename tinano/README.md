@@ -63,7 +63,7 @@ abstract class MyDatabase extends TinanoDatabase {
   @onCreate
   Future<void> _onDatabaseCreated(Database db) async {
     // Here, we can initialize our table structure. 
-    await db.execute("""CREATE TABLE `users` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT NULL )""");
+    await db.execute("""CREATE TABLE `users` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `user_name` TEXT NOT NULL )""");
   }
 
 }
@@ -173,12 +173,16 @@ abstract class MyDatabase extends TinanoDatabase {
 class UserRow {
 
   final int id; // will read the id column from sql, names must match!
-  final String name; // will read the name column from sql, names must match!
+  @FromColumn("user_name")
+  final String name; // will read the user_name column from sql
 
   UserRow(this.id, this.name);
 
 }
 ```
+As you've seen, using the `@FromColumn` annotation allows you to specify from which
+sql column the field will be read from. If the column and the field names match, the
+`@FromColumn` declaration can be omitted.
 
 #### Variables
 As you can see, you can easily map the parameters of your method to sql 
@@ -232,6 +236,7 @@ Note that schema downgrades are not supported.
 
 ### Supported types
 As the database access is asynchronous, all methods must return a `Future`.
+What types are supported exactly depends on your queries:
 
 #### For modifying statements (update / delete)
 A `Future<int>` will resolve to the amount of updated rows, whereas a
@@ -285,8 +290,6 @@ parameter).
 Roughly sorted by descending priority. If you have any suggestions, please go ahead and
 [open an issue](https://github.com/simolus3/tinano/issues/new).
 
-- Being able to use field names that differ from the sql column name in row
-  classes. Adding some annotations like `@FromColumn("my_column")`.
 - Support `@row` classes that have other `@row` types as fields.
 - Supporting a `DateTime` right from the library, auto-generating code to store
   it as a timestamp in the database.
