@@ -12,8 +12,12 @@ class SingleRowTransformationWriter extends Writer {
   final DartType targetType;
   final GenerationContext context;
 
+  final String tablePrefix;
+  final String localVariableSuffix;
+
   SingleRowTransformationWriter(
-      this.targetType, this.context, StringBuffer target, int indent)
+      this.targetType, this.context, StringBuffer target, int indent,
+      [this.tablePrefix = "", this.localVariableSuffix = ""])
       : super(target, indent);
 
   String _castStmt(String expression, DartType targetType) {
@@ -35,27 +39,49 @@ class SingleRowTransformationWriter extends Writer {
 
   @override
   void write() {
+    final localVarName = "parsedRow$localVariableSuffix";
+
     if (types.typeNativelySupported(targetType)) {
       String stmt = _castStmt("row.values.first", targetType);
-      writeLineWithIndent("${targetType.displayName} parsedRow = $stmt;");
+      writeLineWithIndent("${targetType.displayName} $localVarName = $stmt;");
       return;
     }
 
     final customType = context.customTypeForDartType(targetType);
-    String constructorParams = customType.fields
-      .map((field) {
-        if (field is SimpleFieldDefinition) {
-          String escapedColumn = escapeForDoubleQuoteConstant(field.sqlColumnName);
+    final Map<CustomTypeField, String> customFieldsToLocalVars = {};
 
-          return _castStmt("row[\"$escapedColumn\"]", field.type);
+    // First, create local variables for all included rows which need to be
+    // created. We map the field to the local variable created so that we can
+    // resolve them later on.
+    var i = 0;
+    for (final field in customType.fields.whereType<CustomTypeField>()) {
+      final includedVar = "$localVariableSuffix\_$i";
+      new SingleRowTransformationWriter(field.dartType, context, target, indent,
+          field.tablePrefix, includedVar).write();
+
+      customFieldsToLocalVars[field] = "parsedRow$includedVar";
+      i++;
+    }
+
+    String constructorParams = customType.fields.map((field) {
+      if (field is SimpleFieldDefinition) {
+        String columnName = field.sqlColumnName;
+        if (tablePrefix != null) {
+          columnName = "$tablePrefix.$columnName";
         }
 
-        // TODO Handle rows referencing other rows.
-      })
-      .join(", ");
+        String escapedColumn =
+            escapeForDoubleQuoteConstant(columnName);
+
+        return _castStmt("row[\"$escapedColumn\"]", field.type);
+      } else if (field is CustomTypeField) {
+        // The variable has already been created.
+        return customFieldsToLocalVars[field];
+      }
+    }).join(", ");
 
     String targetName = targetType.displayName;
     writeLineWithIndent(
-        "$targetName parsedRow = new $targetName($constructorParams);");
+        "$targetName $localVarName = new $targetName($constructorParams);");
   }
 }

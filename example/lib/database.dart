@@ -52,14 +52,25 @@ class TodoEntry {
   @FromTable("test")
   final Test test;
 
-  TodoEntry(this.id, this.content, this.test);
+  @FromTable("direct")
+  final Test2 test2;
+
+  TodoEntry(this.id, this.content, this.test, this.test2);
 }
 
 @row
 class Test {
 
   final String name;
+  @FromTable("test2")
+  final Test2 nested;
 
-  Test(this.name);
+  Test(this.name, this.nested);
+}
 
+@row
+class Test2 {
+  final String name;
+
+  Test2(this.name);
 }

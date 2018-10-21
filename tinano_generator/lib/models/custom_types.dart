@@ -42,6 +42,8 @@ class CustomTypeField extends FieldDefinition {
 
   final DefinedCustomType type;
 
+  DartType get dartType => type.definition.type;
+
   CustomTypeField(String dartFieldName, this.tablePrefix, this.type) : super(dartFieldName);
 
 }
