@@ -35,3 +35,13 @@ class SimpleFieldDefinition extends FieldDefinition {
         super(dartFieldName);
 }
 
+/// A field that references another custom type.
+class CustomTypeField extends FieldDefinition {
+
+  final String tablePrefix;
+
+  final DefinedCustomType type;
+
+  CustomTypeField(String dartFieldName, this.tablePrefix, this.type) : super(dartFieldName);
+
+}

@@ -31,6 +31,10 @@ bool isFromColumnAnnotation(ElementAnnotation annotation) {
   return annotation.computeConstantValue().type.displayName == "FromColumn";
 }
 
+bool isFromTableAnnotation(ElementAnnotation annotation) {
+  return annotation.computeConstantValue().type.displayName == "FromTable";
+}
+
 bool isActionAnnotation(ElementAnnotation annotation) {
   return ["Update", "Query", "Insert", "Delete"]
       .contains(annotation.constantValue.type.displayName);

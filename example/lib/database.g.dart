@@ -31,7 +31,7 @@ class _$MyDatabaseImpl extends MyDatabase {
     final parsedResults = new List<TodoEntry>();
     rows.forEach((row) {
       TodoEntry parsedRow =
-          new TodoEntry(row["id"] as int, row["content"] as String);
+          new TodoEntry(row["id"] as int, row["content"] as String, null);
       parsedResults.add(parsedRow);
     });
     return parsedResults;

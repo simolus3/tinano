@@ -18,7 +18,7 @@ class GenerationContext {
             element);
       }
 
-      return RowTypeParser(element).parse();
+      return RowTypeParser(element, this).parse();
     });
   }
 }

@@ -90,6 +90,14 @@ class FromColumn {
   const FromColumn(this.column);
 }
 
+class FromTable {
+
+  final String table;
+
+  const FromTable(this.table);
+
+}
+
 class WithTransaction {
   const WithTransaction._();
 }

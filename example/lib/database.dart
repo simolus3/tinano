@@ -49,5 +49,17 @@ class TodoEntry {
   final int id;
   final String content;
 
-  TodoEntry(this.id, this.content);
+  @FromTable("test")
+  final Test test;
+
+  TodoEntry(this.id, this.content, this.test);
+}
+
+@row
+class Test {
+
+  final String name;
+
+  Test(this.name);
+
 }
