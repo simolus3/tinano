@@ -292,7 +292,9 @@ parameter).
 Roughly sorted by descending priority. If you have any suggestions, please go ahead and
 [open an issue](https://github.com/simolus3/tinano/issues/new).
 
-- Supporting a `DateTime` right from the library, auto-generating code to store
+- Support the `bool` type.
+- Support a non-default constructor for `@row` classes. 
+- Support a `DateTime` right from the library, auto-generating code to store
   it as a timestamp in the database.
 - Auto-updating queries that return a `Stream` emitting new values as the
   underlying data changes. Could be similar to the [Room library](https://developer.android.com/topic/libraries/architecture/room)
