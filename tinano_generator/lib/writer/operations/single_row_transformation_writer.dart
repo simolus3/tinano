@@ -34,7 +34,7 @@ class SingleRowTransformationWriter extends Writer {
       return "$expression as Uint8List";
     }
 
-    return "oh no, something went wrong";
+    throw "Tinano does not now how to handlle this type: $targetType";
   }
 
   @override
@@ -66,7 +66,7 @@ class SingleRowTransformationWriter extends Writer {
     String constructorParams = customType.fields.map((field) {
       if (field is SimpleFieldDefinition) {
         String columnName = field.sqlColumnName;
-        if (tablePrefix != null) {
+        if (tablePrefix != null && tablePrefix.isNotEmpty) {
           columnName = "$tablePrefix.$columnName";
         }
 
