@@ -46,7 +46,7 @@ abstract class MyDatabase extends TinanoDatabase {
 
 @row
 class TodoEntry {
-  final int id;
+  final bool id;
   final String content;
 
   @FromTable("test")

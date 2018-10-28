@@ -196,6 +196,10 @@ to first send the sql without data, and then the variables. This means that you
 won't be able to use variables for everything, see
 [this](https://www.quora.com/What-are-the-limitations-of-PDO-prepared-statements-Can-I-define-the-table-and-row-as-arguments) for some examples where you can't.
 
+Your variables will be converted to strings before being handled by sqlite, which
+means that, in theory, you can use every type for your variables. However, only
+`String`, `int`, `num` and `bool` have been tested and are known to work well.
+
 #### Transactions
 You can get a special instance of your database by defining a method with
 `@withTransaction`: Whenever that method is called, the body that you defined
@@ -258,9 +262,12 @@ directly:
 @Query("SELECT COUNT(*) FROM users")
 Future<int> getAmountOfUsers();
 ```
-This will work for `int`, `num`, `Uint8List` and `String`. Please see the
+This will work for `int`, `num`, `Uint8List`, `String` and `bool`. Please see the
 [documentation from sqflite](https://github.com/tekartik/sqflite#supported-sqlite-types)
-to check which dart types are compatible with which sqlite types.  
+to check which dart types are compatible with which sqlite types.
+Note that `bool`s are not supported by sqflite directly, they are a convenience 
+feature provided by tinano. They must be stored as an integer in sqflite. Then,
+every nonzero value will be treated as `true`, and 0 will be treated as `false`.  
 If your queries will return more than one column, you'll have to define it
 in a new immutable class that must only have the unnamed constructor to set the fields:
 ```dart
@@ -274,7 +281,7 @@ class UserResult {
 
 // this should be a method in your TinanoDatabase class....
 @Query("SELECT id, name FROM users")
-Future<List<UserResult>> getBirthmonthDistribution();
+Future<List<UserResult>> getUsers();
 ```
 Each `@row` class may only consist of the primitive fields `int`, `num`,
 `Uint8List` and `String`. Each field in the row class will be read from the
@@ -292,7 +299,6 @@ parameter).
 Roughly sorted by descending priority. If you have any suggestions, please go ahead and
 [open an issue](https://github.com/simolus3/tinano/issues/new).
 
-- Support the `bool` type.
 - Support a non-default constructor for `@row` classes. 
 - Support a `DateTime` right from the library, auto-generating code to store
   it as a timestamp in the database.

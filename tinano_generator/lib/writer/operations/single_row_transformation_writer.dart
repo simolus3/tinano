@@ -21,6 +21,7 @@ class SingleRowTransformationWriter extends Writer {
       : super(target, indent);
 
   String _castStmt(String expression, DartType targetType) {
+    // Types directly supported by sqflite
     if (targetType.displayName == "int") {
       return "$expression as int";
     }
@@ -34,7 +35,13 @@ class SingleRowTransformationWriter extends Writer {
       return "$expression as Uint8List";
     }
 
-    throw "Tinano does not now how to handlle this type: $targetType";
+    // Types not supported directly, we have to provide custom mappings for
+    // those.
+    if (targetType.displayName == "bool") {
+      return "(($expression as int) != 0)";
+    }
+
+    throw "Tinano does not now how to handle this type: $targetType";
   }
 
   @override
