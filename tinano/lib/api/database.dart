@@ -38,12 +38,13 @@ abstract class TinanoDatabase {
 
   /// Opens this database. This method should only be invoked by the generated
   /// code.
-  Future<void> performOpenAndInitialize(String fileName, int path) async {
+  Future<void> performOpenAndInitialize(String fileName, int schemaVersion) async {
     final path = await getDatabasesPath();
     final dbPath = join(path, fileName);
 
     database = await openDatabase(
       dbPath,
+      version: schemaVersion,
       onCreate: (db, _) async => await onCreate(db),
       onUpgrade: (db, from, to) async {
         var currentVersion = from;
