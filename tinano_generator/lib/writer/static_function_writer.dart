@@ -47,7 +47,7 @@ class StaticFunctionWriter extends Writer {
     }
 
     // Call performAndInitialize with parameters from annotation
-    writeLineWithIndent("database.performOpenAndInitialize(\"$definedPath\", $definedSchemaVersion);");
+    writeLineWithIndent("await database.performOpenAndInitialize(\"$definedPath\", $definedSchemaVersion);");
 
     writeLineWithIndent("return database;");
 
