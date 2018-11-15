@@ -211,8 +211,7 @@ Future<bool> createAndChangeName(String originalName, String updatedName) async 
   var id = await createUserWithName(originalName);
   await changeName(id, updatedName);
 }
-```  on Android.
-- Support for custom classes as variable parameters, specifying something like
+```
 
 Notice that, to make this work, tinano will create a __new instance__ of
 your database class, call the transactional method on it, and then go back
