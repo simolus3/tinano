@@ -25,7 +25,7 @@ abstract class TinanoDatabase {
   /// Should only be used by the generated code
   _OnCreate onCreate;
   /// Should only be used by the generated code
-  List<SchemaMigrationWithVersion> migrations;
+  List<SchemaMigrationWithVersion> migrations = [];
 
   /// Creates a new instance of the database class but with the executor
   /// replaced to the one specified in the parameter. Useful as we can use
