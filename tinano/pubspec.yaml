@@ -1,6 +1,6 @@
 name: tinano
 description: Tinano is a type-safe database persistence library for flutter
-version: 0.1.1
+version: 0.1.2
 author: Simon Binder<simolus3@gmail.com>
 homepage: https://github.com/simolus3/tinano
 
@@ -12,4 +12,4 @@ dependencies:
     sdk: flutter
   meta: ^1.1.6
   path: ^1.6.2
-  sqflite: ^0.12.2
+  sqflite: ^1.0.0

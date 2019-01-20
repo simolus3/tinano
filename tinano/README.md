@@ -35,9 +35,18 @@ needed to automatically generate code based on your database definition:
 ```yaml
 dependencies:
   tinano:
+    git:
+      url: git@github.com:simolus3/tinano.git
+      ref: development
+      path: tinano
+
   # ...
 dev_dependencies:
   tinano_generator:
+    git:
+      url: git@github.com:simolus3/tinano.git
+      ref: development
+      path: tinano
   build_runner:
   # test, ...
 ```
@@ -89,7 +98,7 @@ called `S` has to have a function `open` that returns a `Future<S>`.
 Also, you'll have to use the `=> _$myOpenFunction();` syntax, although you're
 free to chose the name here (anything starting with `_$` will do).
 
-The `@onCreate` function, must take a `Database` as a parameter and return a
+The `@onCreate` function must take a `Database` as a parameter and return a
 `Future<void>`. It will be invoked by tinano for the first time your database
 is created in the file system. You can use it to initialize your table structure
 or populate some data. we'll use a very similar syntax to perform schema updates
@@ -121,8 +130,7 @@ to most use-cases:
    be created once.
 
 I know that this isn't exactly simple, but it allows you to just use one database
-for the lifecycle of your app. If you have questions on this or suggestions on how
-to improve this, please feel free to [create an issue](https://github.com/simolus3/tinano/issues/new).
+for the lifecycle of your app. If you have questions on this or suggestions on how to improve this, please feel free to [create an issue](https://github.com/simolus3/tinano/issues/new).
 
 ### Database queries
 Of course, just opening the database is pretty boring. In order to actually 
@@ -209,7 +217,7 @@ method was resolved.
 @withTransaction
 Future<bool> createAndChangeName(String originalName, String updatedName) async {
   var id = await createUserWithName(originalName);
-  await changeName(id, updatedName);
+  return await changeName(id, updatedName);
 }
 ```
 
@@ -294,10 +302,16 @@ after the database is opened, so you can't use it in your `@onCreate` or
 `@OnUpgrade` methods (but you shouldn't need to, as you get the database as a
 parameter).
 
+I'd consider every use case for this outside of `onCreate` or `onUpgrade`
+methods a limitition of the library. So, if you have a valid use case
+where you need to access the database directly, please let my know about
+that in an [issue](https://github.com/simolus3/tinano/issues/new) so that I can improve the library. Thanks!
+
 # TO-DO list
 Roughly sorted by descending priority. If you have any suggestions, please go ahead and
 [open an issue](https://github.com/simolus3/tinano/issues/new).
-
+- Document nested `@row` classes and generally improve usability of these
+- Unit tests for the generator (!)
 - Support a non-default constructor for `@row` classes. 
 - Support a `DateTime` right from the library, auto-generating code to store
   it as a timestamp in the database.
