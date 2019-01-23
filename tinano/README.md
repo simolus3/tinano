@@ -36,7 +36,7 @@ needed to automatically generate code based on your database definition:
 dependencies:
   tinano:
     git:
-      url: git@github.com:simolus3/tinano.git
+      url: https://github.com/simolus3/tinano.git
       ref: development
       path: tinano
 
@@ -44,9 +44,9 @@ dependencies:
 dev_dependencies:
   tinano_generator:
     git:
-      url: git@github.com:simolus3/tinano.git
+      url: https://github.com/simolus3/tinano.git
       ref: development
-      path: tinano
+      path: tinano_generator
   build_runner:
   # test, ...
 ```
