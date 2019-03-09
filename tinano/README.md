@@ -1,10 +1,8 @@
-__Notice__ : All the fun is happening at the 
-[`development`](https://github.com/simolus3/tinano/tree/development) branch, which
-contains all the latest fixes and new features, including better
-documentation. It contains some breaking changes and isn't fully ready 
-yet, but if you want to start using this library, using `development` is
-better than `master` or pub!
-
+__Warning__: This library has been deprecated. Please use
+[moor](https://pub.dartlang.org/packages/moor_flutter) instead. 
+It requires less work to set up, needs less boilerplate code and has more
+features (like natively supported datetimes, a fluent query DSL, and reactive
+streams).
 # tinano
 Tinano is a local persistence library for flutter apps based on
 [sqflite](https://pub.dartlang.org/packages/sqflite). While sqflite is an
